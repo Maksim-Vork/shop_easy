@@ -12,6 +12,10 @@ class DioService {
         baseUrl: "https://api.escuelajs.co/api/v1/",
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 10),
+        headers: {
+          'Accept': 'application/json',
+          if (Platform.isMacOS) 'Origin': 'http://localhost', // Для CORS
+        },
       ),
     );
     if (Platform.isMacOS) {
@@ -34,7 +38,7 @@ class DioService {
       ),
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          final token = '123213'; // заменить на получение токена с сервиса
+          final token = ''; // заменить на получение токена с сервиса
           if (token != 0) {
             options.headers['Authorization'] = 'Bearer $token';
           }
@@ -55,20 +59,20 @@ class DioService {
     ]);
   }
   Future<Response> post(String endpoint, dynamic data) async {
-    try {
-      final response = await _dio.post(endpoint, data: data);
+    final response = await _dio.post(endpoint, data: data);
+    if (response.statusCode == 200 || response.statusCode == 201) {
       return response;
-    } on DioException catch (e) {
-      throw Exception('Ошибка сервера: ${e.response?.statusCode}');
+    } else {
+      throw Exception(response.statusCode);
     }
   }
 
   Future<Response> get(String endpoint) async {
-    try {
-      final response = await _dio.get(endpoint);
+    final response = await _dio.get(endpoint);
+    if (response.statusCode == 200) {
       return response;
-    } on DioException catch (e) {
-      throw Exception('Ошибка сервера: ${e.response?.statusCode}');
+    } else {
+      throw Exception(response.statusCode);
     }
   }
 }
