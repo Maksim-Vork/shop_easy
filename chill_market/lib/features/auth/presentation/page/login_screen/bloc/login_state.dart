@@ -2,7 +2,7 @@ abstract class LoginState {}
 
 class LoginInitial extends LoginState {}
 
-class LoginLoadig extends LoginState {}
+class LoginLoading extends LoginState {}
 
 class LoginSuccessful extends LoginState {
   final String token;

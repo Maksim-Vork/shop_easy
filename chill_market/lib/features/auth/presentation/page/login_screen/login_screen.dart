@@ -7,8 +7,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
+  void _submit() {
+    if (_formKey.currentState!.validate()) {
+      // Все поля прошли проверку
+      print('Email: ${_controllerEmail.text}');
+      print('Password: ${_controllerPassword.text}');
+    } else {
+      // Ошибка валидации
+      print('Ошибка валидации');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,100 +49,128 @@ class LoginScreen extends StatelessWidget {
                   horizontal: 10,
                   vertical: 32,
                 ),
-                child: Column(
-                  children: [
-                    TextField(
-                      controller: _controllerEmail,
-                      style: TextStyle(color: Colors.black),
-                      decoration: InputDecoration(
-                        hintText: 'Почта',
-                        hintStyle: TextStyle(color: Color(0xFF616161)),
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(18),
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(18),
-                          borderSide: BorderSide(color: Colors.red, width: 1),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(18),
-                          borderSide: BorderSide(color: Colors.white, width: 2),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Введите email';
+                          }
+                          if (!value.contains('@')) {
+                            return 'Неверный email';
+                          }
+                          return null;
+                        },
+                        controller: _controllerEmail,
+                        style: TextStyle(color: Colors.black),
+                        decoration: InputDecoration(
+                          hintText: 'Почта',
+                          hintStyle: TextStyle(color: Color(0xFF616161)),
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(18),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(18),
+                            borderSide: BorderSide(color: Colors.red, width: 1),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(18),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                              width: 2,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
 
-                    SizedBox(height: 21),
-                    TextField(
-                      controller: _controllerPassword,
-                      obscureText: true,
-                      style: TextStyle(color: Colors.black),
-                      decoration: InputDecoration(
-                        hintText: 'Пороль',
-                        hintStyle: TextStyle(color: Color(0xFF616161)),
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(18),
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(18),
-                          borderSide: BorderSide(color: Colors.red, width: 1),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(18),
-                          borderSide: BorderSide(color: Colors.white, width: 2),
+                      SizedBox(height: 21),
+                      TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Введите пароль';
+                          }
+                          if (value.length < 6) {
+                            return 'Пароль должен быть минимум 6 символов';
+                          }
+                          return null;
+                        },
+                        controller: _controllerPassword,
+                        obscureText: true,
+                        style: TextStyle(color: Colors.black),
+                        decoration: InputDecoration(
+                          hintText: 'Пороль',
+                          hintStyle: TextStyle(color: Color(0xFF616161)),
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(18),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(18),
+                            borderSide: BorderSide(color: Colors.red, width: 1),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(18),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                              width: 2,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 100),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 57,
-                      child: ElevatedButton(
+                      SizedBox(height: 100),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 57,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            _submit();
+                            BlocProvider.of<LoginBloc>(context).add(
+                              LogInEvent(
+                                email: _controllerEmail.text,
+                                password: _controllerPassword.text,
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18),
+                            ),
+                          ),
+                          child: const Text(
+                            'Войти',
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 12),
+                      TextButton(
                         onPressed: () {
-                          BlocProvider.of<LoginBloc>(context).add(
-                            LogInEvent(
-                              email: _controllerEmail.text,
-                              password: _controllerPassword.text,
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RegisterScreen(),
                             ),
                           );
                         },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18),
+                        child: Text(
+                          'Зарегистрироваться',
+                          style: TextStyle(
+                            fontSize: 17,
+                            color: const Color.fromARGB(255, 224, 224, 224),
                           ),
                         ),
-                        child: const Text(
-                          'Войти',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
                       ),
-                    ),
-                    SizedBox(height: 12),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => RegisterScreen(),
-                          ),
-                        );
-                      },
-                      child: Text(
-                        'Зарегистрироваться',
-                        style: TextStyle(
-                          fontSize: 17,
-                          color: const Color.fromARGB(255, 224, 224, 224),
-                        ),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

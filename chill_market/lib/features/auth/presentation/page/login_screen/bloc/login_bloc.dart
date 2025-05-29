@@ -12,13 +12,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   void _onLogin(LogInEvent event, Emitter<LoginState> emit) async {
     try {
-      emit(LoginLoadig());
+      emit(LoginLoading());
       final String token = await loginUsecase(
         Login(email: event.email, password: event.password),
       );
       emit(LoginSuccessful(token: token));
     } catch (e) {
-      emit(LoginError(error: e as String));
+      emit(LoginError(error: e.toString()));
     }
   }
 }

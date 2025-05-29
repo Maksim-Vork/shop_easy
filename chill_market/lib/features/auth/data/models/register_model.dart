@@ -17,14 +17,20 @@ class RegisterModel {
 
   factory RegisterModel.fromJson(Map<String, dynamic> json) {
     return RegisterModel(
-      name: json['email'],
-      email: json['password'],
+      name: json['name'],
+      email: json['email'],
       password: json['password'],
+      avatar: json['avatar'],
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'name': name, 'email': email, 'password': password};
+    return {
+      'name': name,
+      'email': email,
+      'password': password,
+      'avatar': avatar,
+    };
   }
 
   factory RegisterModel.fromEntity(Register register) {

@@ -22,7 +22,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       );
       emit(RegisterSucceseful());
     } catch (e) {
-      emit(RegisterError(error: e as String));
+      emit(RegisterError(error: e.toString()));
     }
   }
 }
