@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:chill_market/core/ApiService/dio_service.dart';
+import 'package:chill_market/core/exceptions/app_exception.dart';
 import 'package:chill_market/features/auth/data/models/login_model.dart';
 import 'package:chill_market/features/auth/data/models/register_model.dart';
+import 'package:chill_market/features/auth/data/models/token_model.dart';
 
 class AuthRemoteDataSource {
   final DioService dioService;
@@ -13,12 +15,14 @@ class AuthRemoteDataSource {
     try {
       final Map<String, dynamic> data = loginModel.toJson();
       final response = await dioService.post('auth/login', data);
-      final String token = response.data as String;
+      final TokenModel tokenModel = TokenModel.fromJson(response.data);
+      final String token = tokenModel.accessToken;
 
       return token;
+    } on AppException catch (e) {
+      throw AppException(error: e.error);
     } catch (e) {
-      stdout.write('Ошибка типа: $e');
-      throw Exception('Не удалось выполнить вход: $e');
+      throw AppException(error: 'Не удалось выполнить вход');
     }
   }
 

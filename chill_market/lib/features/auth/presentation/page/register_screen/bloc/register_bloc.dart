@@ -1,3 +1,4 @@
+import 'package:chill_market/core/exceptions/app_exception.dart';
 import 'package:chill_market/features/auth/domain/entity/register.dart';
 import 'package:chill_market/features/auth/domain/usecase/register_usecase.dart';
 import 'package:chill_market/features/auth/presentation/page/register_screen/bloc/register_event.dart';
@@ -21,8 +22,8 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         ),
       );
       emit(RegisterSucceseful());
-    } catch (e) {
-      emit(RegisterError(error: e.toString()));
+    } on AppException catch (e) {
+      emit(RegisterError(error: e.error));
     }
   }
 }

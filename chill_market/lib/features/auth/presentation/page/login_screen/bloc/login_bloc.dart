@@ -1,3 +1,4 @@
+import 'package:chill_market/core/exceptions/app_exception.dart';
 import 'package:chill_market/features/auth/domain/entity/login.dart';
 import 'package:chill_market/features/auth/domain/usecase/login_usecase.dart';
 import 'package:chill_market/features/auth/presentation/page/login_screen/bloc/login_event.dart';
@@ -17,8 +18,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         Login(email: event.email, password: event.password),
       );
       emit(LoginSuccessful(token: token));
-    } catch (e) {
-      emit(LoginError(error: e.toString()));
+    } on AppException catch (e) {
+      emit(LoginError(error: e.error));
     }
   }
 }

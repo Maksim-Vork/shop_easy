@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chill_market/core/exceptions/app_exception.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 
@@ -59,11 +60,30 @@ class DioService {
     ]);
   }
   Future<Response> post(String endpoint, dynamic data) async {
-    final response = await _dio.post(endpoint, data: data);
-    if (response.statusCode == 200 || response.statusCode == 201) {
+    try {
+      final response = await _dio.post(endpoint, data: data);
+
+      print('успешно вошел');
       return response;
-    } else {
-      throw Exception(response.statusCode);
+    } on DioException catch (e) {
+      final statusCode = e.response?.statusCode;
+
+      if (statusCode == 400) {
+        throw AppException(error: 'Неверные данные');
+      } else if (statusCode == 401) {
+        throw AppException(error: 'Неверный email/пароль');
+      } else if (statusCode == 409) {
+        throw AppException(error: 'Пользователь уже зарегистрирован');
+      } else if (statusCode == 404) {
+        throw AppException(error: 'Пользователь не найден');
+      } else if (e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.unknown) {
+        throw AppException(error: 'Ошибка сети. Проверьте интернет-соединение');
+      } else {
+        throw AppException(error: 'Ошибка сервера: ${e.message}');
+      }
+    } catch (e) {
+      throw AppException(error: 'Произошла непредвиденная ошибка');
     }
   }
 
