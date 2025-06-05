@@ -13,7 +13,7 @@ import 'package:chill_market/features/auth/presentation/page/login_screen/bloc/l
 import 'package:chill_market/features/auth/presentation/page/login_screen/login_screen.dart';
 import 'package:chill_market/features/auth/presentation/page/register_screen/bloc/register_bloc.dart';
 import 'package:chill_market/features/catalog/presentation/screens/catalog_screen.dart';
-
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,7 +25,6 @@ void main() async {
     prefs: prefs,
   );
   final DioService dioService = DioService(authLocalTokenService);
-
   final AuthRemoteDataSource authRemoteData = AuthRemoteDataSource(
     dioService: dioService,
   );
@@ -41,33 +40,39 @@ void main() async {
   );
 
   runApp(
-    MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => LoginBloc(loginUseCase)),
-        BlocProvider(create: (context) => RegisterBloc(registerUsecase)),
-        BlocProvider(
-          create:
-              (context) =>
-                  AuthBloc(authLocalTokenService)..add(CheckAuthEvent()),
-        ),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        // ignore: deprecated_member_use
-        useInheritedMediaQuery: true,
-        theme: lightTheme,
-        home: BlocBuilder<AuthBloc, AuthState>(
-          builder: (context, state) {
-            if (state is AuthInitialState || state is AuthLoadingState) {
-              return Scaffold(body: CircularProgressIndicator());
-            } else if (state is SuccesAuthState) {
-              return CatalogScreen();
-            } else {
-              return LoginScreen();
-            }
-          },
-        ),
-      ),
+    DevicePreview(
+      enabled: true,
+      builder:
+          (context) => MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (context) => LoginBloc(loginUseCase)),
+              BlocProvider(create: (context) => RegisterBloc(registerUsecase)),
+              BlocProvider(
+                create:
+                    (context) =>
+                        AuthBloc(authLocalTokenService)..add(CheckAuthEvent()),
+              ),
+            ],
+            child: MaterialApp(
+              debugShowCheckedModeBanner: false,
+              // ignore: deprecated_member_use
+              useInheritedMediaQuery: true,
+              theme: lightTheme,
+              home: BlocBuilder<AuthBloc, AuthState>(
+                builder: (context, state) {
+                  if (state is AuthInitialState || state is AuthLoadingState) {
+                    return const Scaffold(
+                      body: Center(child: CircularProgressIndicator()),
+                    );
+                  } else if (state is SuccesAuthState) {
+                    return const CatalogScreen();
+                  } else {
+                    return LoginScreen();
+                  }
+                },
+              ),
+            ),
+          ),
     ),
   );
 }

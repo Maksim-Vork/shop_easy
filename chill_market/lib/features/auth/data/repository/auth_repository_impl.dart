@@ -2,7 +2,6 @@ import 'package:chill_market/core/Service/LocalStoredToken/auth_local_token.dart
 import 'package:chill_market/features/auth/data/datasourse/auth_remote_data_source.dart';
 import 'package:chill_market/features/auth/data/models/login_model.dart';
 import 'package:chill_market/features/auth/data/models/register_model.dart';
-
 import 'package:chill_market/features/auth/domain/entity/login.dart';
 import 'package:chill_market/features/auth/domain/entity/register.dart';
 import 'package:chill_market/features/auth/domain/repository/auth_repository.dart';
@@ -21,7 +20,7 @@ class AuthRepositoryImpl extends AuthRepository {
     final LoginModel loginModel = LoginModel.fromEntity(login);
     final String token = await authRemoteData.login(loginModel);
     await authLocalTokenService.saveToken(token);
-    return authRemoteData.login(loginModel);
+    return token;
   }
 
   @override

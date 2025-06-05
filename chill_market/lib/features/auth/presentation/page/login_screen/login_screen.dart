@@ -13,7 +13,8 @@ class LoginScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
-  void _submit(context) {
+
+  void _submit(BuildContext context) {
     if (_formKey.currentState!.validate()) {
       BlocProvider.of<LoginBloc>(context).add(
         LogInEvent(
@@ -22,6 +23,7 @@ class LoginScreen extends StatelessWidget {
         ),
       );
     } else {
+      // Ошибка валидации
       print('Ошибка валидации');
     }
   }
@@ -38,7 +40,7 @@ class LoginScreen extends StatelessWidget {
         if (state is LoginSuccessful) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Успешный вход'),
+              content: const Text('Успешный вход'),
               backgroundColor: Colors.green,
             ),
           );
@@ -51,7 +53,7 @@ class LoginScreen extends StatelessWidget {
         body: Center(
           child: Column(
             children: [
-              SizedBox(height: 135),
+              const SizedBox(height: 135),
               Text(
                 'Вход',
                 style: TextStyle(
@@ -60,7 +62,7 @@ class LoginScreen extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               Container(
                 width: 339,
                 decoration: BoxDecoration(
@@ -68,7 +70,7 @@ class LoginScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(18),
                 ),
                 child: Padding(
-                  padding: EdgeInsetsGeometry.symmetric(
+                  padding: const EdgeInsets.symmetric(
                     horizontal: 10,
                     vertical: 32,
                   ),
@@ -87,10 +89,12 @@ class LoginScreen extends StatelessWidget {
                             return null;
                           },
                           controller: _controllerEmail,
-                          style: TextStyle(color: Colors.black),
+                          style: const TextStyle(color: Colors.black),
                           decoration: InputDecoration(
                             hintText: 'Почта',
-                            hintStyle: TextStyle(color: Color(0xFF616161)),
+                            hintStyle: const TextStyle(
+                              color: Color(0xFF616161),
+                            ),
                             filled: true,
                             fillColor: Colors.white,
                             border: OutlineInputBorder(
@@ -113,8 +117,7 @@ class LoginScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-
-                        SizedBox(height: 21),
+                        const SizedBox(height: 21),
                         TextFormField(
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -127,10 +130,12 @@ class LoginScreen extends StatelessWidget {
                           },
                           controller: _controllerPassword,
                           obscureText: true,
-                          style: TextStyle(color: Colors.black),
+                          style: const TextStyle(color: Colors.black),
                           decoration: InputDecoration(
-                            hintText: 'Пороль',
-                            hintStyle: TextStyle(color: Color(0xFF616161)),
+                            hintText: 'Пароль',
+                            hintStyle: const TextStyle(
+                              color: Color(0xFF616161),
+                            ),
                             filled: true,
                             fillColor: Colors.white,
                             border: OutlineInputBorder(
@@ -153,7 +158,7 @@ class LoginScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        SizedBox(height: 100),
+                        const SizedBox(height: 100),
                         SizedBox(
                           width: double.infinity,
                           height: 57,
@@ -177,7 +182,7 @@ class LoginScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        SizedBox(height: 12),
+                        const SizedBox(height: 12),
                         TextButton(
                           onPressed: () {
                             Navigator.push(
@@ -187,11 +192,11 @@ class LoginScreen extends StatelessWidget {
                               ),
                             );
                           },
-                          child: Text(
+                          child: const Text(
                             'Зарегистрироваться',
                             style: TextStyle(
                               fontSize: 17,
-                              color: const Color.fromARGB(255, 224, 224, 224),
+                              color: Color.fromARGB(255, 224, 224, 224),
                             ),
                           ),
                         ),

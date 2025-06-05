@@ -17,19 +17,21 @@ class DioService {
         receiveTimeout: const Duration(seconds: 10),
         headers: {
           'Accept': 'application/json',
-          if (Platform.isMacOS) 'Origin': 'http://localhost', // Для CORS
+          if (Platform.isMacOS) 'Origin': 'http://localhost',
         },
       ),
     );
+
     if (Platform.isMacOS) {
-      (_dio.httpClientAdapter as IOHttpClientAdapter)
-          // ignore: deprecated_member_use
-          .onHttpClientCreate = (HttpClient client) {
+      (_dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate = (
+        HttpClient client,
+      ) {
         client.badCertificateCallback =
             (X509Certificate cert, String host, int port) => true;
         return client;
       };
     }
+
     _dio.interceptors.addAll([
       LogInterceptor(
         request: true,
@@ -42,7 +44,7 @@ class DioService {
       InterceptorsWrapper(
         onRequest: (options, handler) async {
           final token = await authLocalTokenService.getToken();
-          if (token != null) {
+          if (token != null && token.isNotEmpty) {
             options.headers['Authorization'] = 'Bearer $token';
           }
           return handler.next(options);
@@ -61,10 +63,11 @@ class DioService {
       ),
     ]);
   }
+
   Future<Response> post(String endpoint, dynamic data) async {
     try {
       final response = await _dio.post(endpoint, data: data);
-
+      print('Успешный запрос');
       return response;
     } on DioException catch (e) {
       final statusCode = e.response?.statusCode;
@@ -89,11 +92,11 @@ class DioService {
   }
 
   Future<Response> get(String endpoint) async {
-    final response = await _dio.get(endpoint);
-    if (response.statusCode == 200) {
+    try {
+      final response = await _dio.get(endpoint);
       return response;
-    } else {
-      throw Exception(response.statusCode);
+    } on DioException catch (e) {
+      throw AppException(error: 'Ошибка при GET запросе: ${e.message}');
     }
   }
 }
