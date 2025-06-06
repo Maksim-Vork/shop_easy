@@ -8,11 +8,7 @@ plugins {
 android {
     namespace = "com.example.chill_market"
     compileSdk = flutter.compileSdkVersion
-<<<<<<< HEAD
     ndkVersion = flutter.ndkVersion // Версия, которую требует shared_preferences_android
-=======
-    ndkVersion = flutter.ndkVersion
->>>>>>> 9cb7a05b9dd6b8c6f1237a9dc0d5f1c883e3ff9a
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

@@ -13,18 +13,6 @@ class CatalogScreen extends StatefulWidget {
 class _CatalogScreenState extends State<CatalogScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(
-            onPressed: () {
-              BlocProvider.of<AuthBloc>(context).add(LogoutAuthsEvent());
-            },
-            child: Text('Выйти с аканута'),
-          ),
-        ],
-      ),
-    );
+    return Scaffold(body: CustomScrollView(slivers: [SliverAppBar()]));
   }
 }
