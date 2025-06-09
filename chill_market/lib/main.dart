@@ -12,8 +12,12 @@ import 'package:chill_market/features/auth/domain/usecase/register_usecase.dart'
 import 'package:chill_market/features/auth/presentation/page/login_screen/bloc/login_bloc.dart';
 import 'package:chill_market/features/auth/presentation/page/login_screen/login_screen.dart';
 import 'package:chill_market/features/auth/presentation/page/register_screen/bloc/register_bloc.dart';
+import 'package:chill_market/features/catalog/data/datasource/catalog_remote_data.dart';
+import 'package:chill_market/features/catalog/data/repository/catalog_repository_impl.dart';
+import 'package:chill_market/features/catalog/domain/repository/catalog_repository.dart';
+import 'package:chill_market/features/catalog/domain/usecase/get_list_product.dart';
+import 'package:chill_market/features/catalog/presentation/screens/ProductListScreen/bloc/product_list_bloc.dart';
 import 'package:chill_market/features/catalog/presentation/screens/catalog_screen.dart';
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,6 +28,7 @@ void main() async {
   final AuthLocalTokenService authLocalTokenService = AuthLocalTokenService(
     prefs: prefs,
   );
+
   final DioService dioService = DioService(authLocalTokenService);
   final AuthRemoteDataSource authRemoteData = AuthRemoteDataSource(
     dioService: dioService,
@@ -35,44 +40,52 @@ void main() async {
   final LoginUsecase loginUseCase = LoginUsecase(
     authRepository: authRepository,
   );
+  final CatalogRemoteData catalogRemoteData = CatalogRemoteData(
+    dioService: dioService,
+  );
+  final CatalogRepository catalogRepository = CatalogRepositoryImpl(
+    catalogRemoteData: catalogRemoteData,
+  );
+  final GetListProductUsecase getListProductUsecase = GetListProductUsecase(
+    catalogRepository: catalogRepository,
+  );
   final RegisterUsecase registerUsecase = RegisterUsecase(
     authRepository: authRepository,
   );
 
   runApp(
-    DevicePreview(
-      enabled: true,
-      builder:
-          (context) => MultiBlocProvider(
-            providers: [
-              BlocProvider(create: (context) => LoginBloc(loginUseCase)),
-              BlocProvider(create: (context) => RegisterBloc(registerUsecase)),
-              BlocProvider(
-                create:
-                    (context) =>
-                        AuthBloc(authLocalTokenService)..add(CheckAuthEvent()),
-              ),
-            ],
-            child: MaterialApp(
-              debugShowCheckedModeBanner: false,
-              // ignore: deprecated_member_use
-              useInheritedMediaQuery: true,
-              theme: lightTheme,
-              home: BlocBuilder<AuthBloc, AuthState>(
-                builder: (context, state) {
-                  if (state is AuthInitialState || state is AuthLoadingState) {
-                    return const Scaffold(
-                      body: Center(child: CircularProgressIndicator()),
-                    );
-                  } else if (state is SuccesAuthState) {
-                    return const CatalogScreen();
-                  } else {
-                    return LoginScreen();
-                  }
-                },
-              ),
-            ),
-          ),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => LoginBloc(loginUseCase)),
+        BlocProvider(create: (context) => RegisterBloc(registerUsecase)),
+        BlocProvider(
+          create:
+              (context) =>
+                  AuthBloc(authLocalTokenService)..add(CheckAuthEvent()),
+        ),
+        BlocProvider(
+          create: (context) => ProductListBloc(getListProductUsecase),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        // ignore: deprecated_member_use
+        useInheritedMediaQuery: true,
+        theme: lightTheme,
+        home: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+            if (state is AuthInitialState || state is AuthLoadingState) {
+              return const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              );
+            } else if (state is SuccesAuthState) {
+              return CatalogHome();
+            } else {
+              return LoginScreen();
+            }
+          },
+        ),
+      ),
     ),
   );
 }

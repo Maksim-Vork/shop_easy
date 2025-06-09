@@ -1,10 +1,10 @@
 import 'package:chill_market/features/catalog/domain/entity/product.dart';
 import 'package:chill_market/features/catalog/domain/repository/catalog_repository.dart';
 
-class GetListProduct {
+class GetListProductUsecase {
   final CatalogRepository catalogRepository;
 
-  GetListProduct({required this.catalogRepository});
+  GetListProductUsecase({required this.catalogRepository});
 
   Future<List<Product>> call() async {
     final List<Product> products = await catalogRepository.getListProduct();
