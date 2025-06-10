@@ -3,6 +3,7 @@ import 'package:chill_market/features/catalog/domain/entity/product.dart';
 import 'package:chill_market/features/catalog/presentation/screens/ProductListScreen/bloc/product_list_bloc.dart';
 import 'package:chill_market/features/catalog/presentation/screens/ProductListScreen/bloc/product_list_event.dart';
 import 'package:chill_market/features/catalog/presentation/screens/ProductListScreen/bloc/product_list_state.dart';
+import 'package:chill_market/features/catalog/presentation/screens/ProductsScreen/product_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -215,10 +216,97 @@ class _CatalogScreenState extends State<CatalogScreen> {
                 crossAxisCount: 2,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 7,
-                childAspectRatio: 0.7,
+                childAspectRatio: 0.67,
               ),
               itemBuilder: (context, index) {
-                return Container(decoration: BoxDecoration(color: Colors.grey));
+                final List<Product> products = widget.products;
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) =>
+                                ProductScreen(product: widget.products[index]),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          width: double.infinity,
+                          height: 169,
+
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(18),
+                            child: Image.network(
+                              products[index].images.first,
+                              fit: BoxFit.cover,
+                              errorBuilder:
+                                  (_, __, ___) => const Icon(Icons.error),
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(height: 7),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              maxLines: 1,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+
+                              products[index].title.length > 20
+                                  ? "${products[index].title.substring(0, 16)}.."
+                                  : products[index].title,
+                            ),
+                            Text(
+                              style: TextStyle(
+                                color: AppTheme.priceColor,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              products[index].price.toString().length > 5
+                                  ? "${products[index].price.toString().substring(0, 5)}.."
+                                  : '${products[index].price}\$',
+                            ),
+                          ],
+                        ),
+
+                        Text(
+                          products[index].description,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(height: 7),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 40,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18),
+                              ),
+                            ),
+                            onPressed: () {},
+                            child: Text('Заказать'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
               },
             ),
           ),

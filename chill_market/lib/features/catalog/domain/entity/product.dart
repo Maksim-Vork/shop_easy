@@ -1,5 +1,4 @@
 import 'package:chill_market/features/catalog/domain/entity/category.dart';
-import 'package:chill_market/features/catalog/domain/entity/images.dart';
 
 class Product {
   final int id;
@@ -7,7 +6,7 @@ class Product {
   final int price;
   final String description;
   final MyCategory category;
-  final Images images;
+  final List<String> images;
 
   Product(
     this.category,

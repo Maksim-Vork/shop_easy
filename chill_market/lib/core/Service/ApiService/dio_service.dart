@@ -34,11 +34,11 @@ class DioService {
 
     _dio.interceptors.addAll([
       LogInterceptor(
-        request: true,
-        requestHeader: true,
-        requestBody: true,
-        responseHeader: true,
-        responseBody: true,
+        // request: false,
+        requestHeader: false,
+        requestBody: false,
+        responseHeader: false,
+        responseBody: false,
         error: true,
       ),
       InterceptorsWrapper(
@@ -67,7 +67,6 @@ class DioService {
   Future<Response> post(String endpoint, dynamic data) async {
     try {
       final response = await _dio.post(endpoint, data: data);
-      print('Успешный запрос');
       return response;
     } on DioException catch (e) {
       final statusCode = e.response?.statusCode;

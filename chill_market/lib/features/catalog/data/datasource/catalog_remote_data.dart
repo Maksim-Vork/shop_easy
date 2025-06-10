@@ -9,7 +9,14 @@ class CatalogRemoteData {
   Future<List<ProductModel>> getProducts() async {
     try {
       final response = await dioService.get('products');
-      final List<ProductModel> products = response.data as List<ProductModel>;
+
+      final List<dynamic> responseList = response.data;
+
+      final List<ProductModel> products =
+          responseList
+              .map((product) => ProductModel.fromJson(product))
+              .toList();
+
       return products;
     } catch (e) {
       throw Exception(e);
