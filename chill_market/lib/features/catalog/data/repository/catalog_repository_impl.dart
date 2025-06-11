@@ -17,4 +17,14 @@ class CatalogRepositoryImpl extends CatalogRepository {
         productsModel.map((productsModel) => productsModel.toEntity()).toList();
     return products;
   }
+
+  @override
+  Future<List<Product>> getListProductBySlug(String slug) async {
+    final List<ProductModel> productsModel = await catalogRemoteData
+        .getProductsBuSlug(slug);
+
+    final List<Product> products =
+        productsModel.map((productsModel) => productsModel.toEntity()).toList();
+    return products;
+  }
 }

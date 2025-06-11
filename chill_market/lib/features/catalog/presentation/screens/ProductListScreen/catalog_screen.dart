@@ -26,7 +26,10 @@ class _CatalogHomeState extends State<CatalogHome> {
     return BlocBuilder<ProductListBloc, ProductListState>(
       builder: (context, state) {
         if (state is ProductListInitial || state is ProductListLoading) {
-          return Scaffold(body: Center(child: CircularProgressIndicator()));
+          return Container(
+            color: Colors.black54, // Полупрозрачная подложка
+            child: Center(child: CircularProgressIndicator()),
+          );
         } else if (state is ProductListLoaded) {
           return CatalogScreen(products: state.products);
         } else if (state is ProductListError) {

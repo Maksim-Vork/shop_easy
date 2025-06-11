@@ -22,4 +22,21 @@ class CatalogRemoteData {
       throw Exception(e);
     }
   }
+
+  Future<List<ProductModel>> getProductsBuSlug(String slug) async {
+    try {
+      final response = await dioService.get('categories/slug/$slug');
+
+      final List<dynamic> responseList = response.data;
+
+      final List<ProductModel> products =
+          responseList
+              .map((product) => ProductModel.fromJson(product))
+              .toList();
+
+      return products;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }
