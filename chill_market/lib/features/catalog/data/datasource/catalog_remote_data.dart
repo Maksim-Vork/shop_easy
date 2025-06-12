@@ -25,7 +25,7 @@ class CatalogRemoteData {
 
   Future<List<ProductModel>> getProductsBuSlug(String slug) async {
     try {
-      final response = await dioService.get('categories/slug/$slug');
+      final response = await dioService.get('products/?categorySlug=$slug');
 
       final List<dynamic> responseList = response.data;
 

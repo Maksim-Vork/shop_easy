@@ -16,6 +16,8 @@ import 'package:chill_market/features/catalog/data/datasource/catalog_remote_dat
 import 'package:chill_market/features/catalog/data/repository/catalog_repository_impl.dart';
 import 'package:chill_market/features/catalog/domain/repository/catalog_repository.dart';
 import 'package:chill_market/features/catalog/domain/usecase/get_list_product.dart';
+import 'package:chill_market/features/catalog/domain/usecase/get_list_products_by_slug.dart';
+import 'package:chill_market/features/catalog/presentation/screens/ProductCategoryScreen/bloc/category_bloc.dart';
 import 'package:chill_market/features/catalog/presentation/screens/ProductListScreen/bloc/product_list_bloc.dart';
 import 'package:chill_market/main_scaffold.dart';
 import 'package:flutter/material.dart';
@@ -53,6 +55,9 @@ void main() async {
   final RegisterUsecase registerUsecase = RegisterUsecase(
     authRepository: authRepository,
   );
+  final GetListProductsBySlug getListProductsBySlug = GetListProductsBySlug(
+    catalogRepository: catalogRepository,
+  );
 
   runApp(
     MultiBlocProvider(
@@ -67,6 +72,7 @@ void main() async {
         BlocProvider(
           create: (context) => ProductListBloc(getListProductUsecase),
         ),
+        BlocProvider(create: (context) => CategoryBloc(getListProductsBySlug)),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
