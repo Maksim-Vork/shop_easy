@@ -123,7 +123,7 @@ class LoginScreen extends StatelessWidget {
                             if (value == null || value.isEmpty) {
                               return 'Введите пароль';
                             }
-                            if (value.length < 6) {
+                            if (value.length < 5) {
                               return 'Пароль должен быть минимум 6 символов';
                             }
                             return null;

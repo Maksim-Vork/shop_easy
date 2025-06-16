@@ -1,4 +1,8 @@
 import 'package:chill_market/core/Service/ThemeService/app_theme.dart';
+import 'package:chill_market/features/cart/domain/entity/product.dart';
+import 'package:chill_market/features/cart/domain/entity/product_cart.dart';
+import 'package:chill_market/features/cart/presentation/bloc/cart_bloc.dart';
+import 'package:chill_market/features/cart/presentation/bloc/cart_event.dart';
 import 'package:chill_market/features/catalog/domain/entity/product.dart';
 import 'package:chill_market/features/catalog/presentation/screens/ProductListScreen/bloc/product_list_bloc.dart';
 import 'package:chill_market/features/catalog/presentation/screens/ProductListScreen/bloc/product_list_event.dart';
@@ -302,7 +306,23 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                 borderRadius: BorderRadius.circular(18),
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              BlocProvider.of<CartBloc>(context).add(
+                                AddProductEvent(
+                                  productCart: ProductCart(
+                                    id: products[index].id,
+                                    product: ProductC(
+                                      id: products[index].id,
+                                      title: products[index].title,
+                                      price: products[index].price,
+                                      description: products[index].description,
+                                      images: products[index].images.first,
+                                    ),
+                                    count: 1,
+                                  ),
+                                ),
+                              );
+                            },
                             child: Text('Заказать'),
                           ),
                         ),

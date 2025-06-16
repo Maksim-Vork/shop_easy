@@ -1,4 +1,5 @@
 import 'package:chill_market/core/Service/ApiService/dio_service.dart';
+import 'package:chill_market/core/Service/HiveService/hive_service.dart';
 import 'package:chill_market/core/Service/LocalStoredToken/auth_local_token.dart';
 import 'package:chill_market/core/Service/ThemeService/theme.dart';
 import 'package:chill_market/core/bloc_auth/auth_bloc.dart';
@@ -12,6 +13,15 @@ import 'package:chill_market/features/auth/domain/usecase/register_usecase.dart'
 import 'package:chill_market/features/auth/presentation/page/login_screen/bloc/login_bloc.dart';
 import 'package:chill_market/features/auth/presentation/page/login_screen/login_screen.dart';
 import 'package:chill_market/features/auth/presentation/page/register_screen/bloc/register_bloc.dart';
+import 'package:chill_market/features/cart/data/datasource/cart_datasource.dart';
+import 'package:chill_market/features/cart/data/repository/cart_repository_impl.dart';
+import 'package:chill_market/features/cart/domain/repository/cart_repository.dart';
+import 'package:chill_market/features/cart/domain/usecase/add_product_cart.dart';
+import 'package:chill_market/features/cart/domain/usecase/delete_product_cart.dart';
+import 'package:chill_market/features/cart/domain/usecase/edit_count_product.dart';
+import 'package:chill_market/features/cart/domain/usecase/get_cart_usecase.dart';
+import 'package:chill_market/features/cart/presentation/bloc/cart_bloc.dart';
+import 'package:chill_market/features/cart/presentation/bloc/cart_event.dart';
 import 'package:chill_market/features/catalog/data/datasource/catalog_remote_data.dart';
 import 'package:chill_market/features/catalog/data/repository/catalog_repository_impl.dart';
 import 'package:chill_market/features/catalog/domain/repository/catalog_repository.dart';
@@ -26,6 +36,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final HiveService hiveService = HiveService();
+  await hiveService.init();
+
   final SharedPreferences prefs = await SharedPreferences.getInstance();
 
   final AuthLocalTokenService authLocalTokenService = AuthLocalTokenService(
@@ -58,7 +71,24 @@ void main() async {
   final GetListProductsBySlug getListProductsBySlug = GetListProductsBySlug(
     catalogRepository: catalogRepository,
   );
-
+  final CartDatasource cartDatasource = CartDatasource(
+    hiveService: hiveService,
+  );
+  final CartRepository cartRepository = CartRepositoryImpl(
+    cartDatasource: cartDatasource,
+  );
+  final AddProductCartUsecase addProductCart = AddProductCartUsecase(
+    cartRepository: cartRepository,
+  );
+  final DeleteProductCartUsecase deleteProductCart = DeleteProductCartUsecase(
+    cartRepository: cartRepository,
+  );
+  final EditCountProductUsecase editCountProduct = EditCountProductUsecase(
+    cartRepository: cartRepository,
+  );
+  final GetCartUsecase getCartUsecase = GetCartUsecase(
+    cartRepository: cartRepository,
+  );
   runApp(
     MultiBlocProvider(
       providers: [
@@ -73,6 +103,15 @@ void main() async {
           create: (context) => ProductListBloc(getListProductUsecase),
         ),
         BlocProvider(create: (context) => CategoryBloc(getListProductsBySlug)),
+        BlocProvider(
+          create:
+              (context) => CartBloc(
+                addProductCart,
+                deleteProductCart,
+                editCountProduct,
+                getCartUsecase,
+              )..add(GetCartEvent()),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
