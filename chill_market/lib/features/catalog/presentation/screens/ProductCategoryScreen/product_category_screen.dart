@@ -132,7 +132,12 @@ class ProductCategoryScreen extends StatelessWidget {
                 );
               } else if (state is CategoryLoading) {
                 return SliverToBoxAdapter(
-                  child: Center(child: CircularProgressIndicator()),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 80),
+                      Center(child: CircularProgressIndicator()),
+                    ],
+                  ),
                 );
               } else if (state is CategoryLoaded) {
                 return SliverPadding(

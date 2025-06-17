@@ -2,7 +2,7 @@ import 'package:chill_market/core/Service/ThemeService/app_theme.dart';
 import 'package:chill_market/features/cart/presentation/cart_screen.dart';
 import 'package:chill_market/features/catalog/presentation/screens/ProductCategoryScreen/product_category_screen.dart';
 import 'package:chill_market/features/catalog/presentation/screens/ProductListScreen/catalog_screen.dart';
-import 'package:chill_market/features/profile/settings_screen.dart';
+import 'package:chill_market/features/profile/presentation/settings_screen.dart';
 
 import 'package:flutter/material.dart';
 

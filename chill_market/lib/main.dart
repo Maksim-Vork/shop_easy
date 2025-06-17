@@ -29,6 +29,13 @@ import 'package:chill_market/features/catalog/domain/usecase/get_list_product.da
 import 'package:chill_market/features/catalog/domain/usecase/get_list_products_by_slug.dart';
 import 'package:chill_market/features/catalog/presentation/screens/ProductCategoryScreen/bloc/category_bloc.dart';
 import 'package:chill_market/features/catalog/presentation/screens/ProductListScreen/bloc/product_list_bloc.dart';
+import 'package:chill_market/features/profile/data/datasource/settings_datasource.dart';
+import 'package:chill_market/features/profile/data/repository/SettingsRepositoryImpl.dart';
+import 'package:chill_market/features/profile/domain/repository/repository_settings.dart';
+import 'package:chill_market/features/profile/domain/usecase/edit_settings_usecase.dart';
+import 'package:chill_market/features/profile/domain/usecase/get_settings_usecase.dart';
+import 'package:chill_market/features/profile/presentation/bloc/settings_bloc.dart';
+import 'package:chill_market/features/profile/presentation/bloc/settings_event.dart';
 import 'package:chill_market/main_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -89,6 +96,18 @@ void main() async {
   final GetCartUsecase getCartUsecase = GetCartUsecase(
     cartRepository: cartRepository,
   );
+  final SettingsDatasource settingsDatasource = SettingsDatasource(
+    hiveService: hiveService,
+  );
+  final SettingsRepository settingsRepository = Settingsrepositoryimpl(
+    settingsDatasource: settingsDatasource,
+  );
+  final EditSettingsUsecase editSettingsUsecase = EditSettingsUsecase(
+    settingsRepository: settingsRepository,
+  );
+  final GetSettingsUsecase getSettingsUsecase = GetSettingsUsecase(
+    settingsRepository: settingsRepository,
+  );
   runApp(
     MultiBlocProvider(
       providers: [
@@ -111,6 +130,12 @@ void main() async {
                 editCountProduct,
                 getCartUsecase,
               )..add(GetCartEvent()),
+        ),
+        BlocProvider(
+          create:
+              (context) =>
+                  SettingsBloc(editSettingsUsecase, getSettingsUsecase)
+                    ..add(GetSettings()),
         ),
       ],
       child: MaterialApp(
