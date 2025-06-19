@@ -1,4 +1,8 @@
 import 'package:chill_market/core/Service/ThemeService/app_theme.dart';
+import 'package:chill_market/features/cart/domain/entity/product.dart';
+import 'package:chill_market/features/cart/domain/entity/product_cart.dart';
+import 'package:chill_market/features/cart/presentation/bloc/cart_bloc.dart';
+import 'package:chill_market/features/cart/presentation/bloc/cart_event.dart';
 import 'package:chill_market/features/catalog/domain/entity/product.dart';
 import 'package:chill_market/features/catalog/presentation/screens/ProductCategoryScreen/bloc/category_bloc.dart';
 import 'package:chill_market/features/catalog/presentation/screens/ProductCategoryScreen/bloc/category_event.dart';
@@ -15,24 +19,15 @@ class ProductCategoryScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppTheme.appBarColor,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            IconButton(
-              padding: EdgeInsets.zero,
-              onPressed: () {},
-              icon: Icon(Icons.arrow_back),
+        title: Center(
+          child: Text(
+            'Категории',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
             ),
-            Text(
-              'Категории',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(width: 45),
-          ],
+          ),
         ),
       ),
       body: CustomScrollView(
@@ -50,22 +45,28 @@ class ProductCategoryScreen extends StatelessWidget {
                 childAspectRatio: 1.47,
               ),
               itemBuilder: (context, index) {
-                final Map<String, String> categoryProducts = {
-                  'Одежда': 'clothes',
-                  'Электронника': 'electronics',
-                  'Мебель': 'furniture',
-                  'Обувь': 'shoes',
-                  'Разнообразный': 'miscellaneous',
+                final Map<String, List<String>> categoryProducts = {
+                  'Одежда': ['clothes', 'https://i.imgur.com/QkIa5tT.jpeg'],
+                  'Электронника': [
+                    'electronics',
+                    'https://i.imgur.com/ZANVnHE.jpeg',
+                  ],
+                  'Мебель': ['furniture', 'https://i.imgur.com/Qphac99.jpeg'],
+                  'Обувь': ['shoes', 'https://i.imgur.com/qNOjJje.jpeg'],
+                  'Разнообразный': [
+                    'miscellaneous',
+                    'https://i.imgur.com/BG8J0Fj.jpg',
+                  ],
                 };
                 final List<String> categoryName =
                     categoryProducts.keys.toList();
-                final List<String> categorySlug =
+                final List<List<String>> categorySlug =
                     categoryProducts.values.toList();
                 return InkWell(
                   onTap: () {
-                    BlocProvider.of<CategoryBloc>(
-                      context,
-                    ).add(CategorySearchBySlug(slug: categorySlug[index]));
+                    BlocProvider.of<CategoryBloc>(context).add(
+                      CategorySearchBySlug(slug: categorySlug[index].first),
+                    );
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -85,6 +86,16 @@ class ProductCategoryScreen extends StatelessWidget {
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Image.network(
+                                height: 75,
+                                width: 75,
+                                categorySlug[index][1],
                               ),
                             ],
                           ),
@@ -162,7 +173,7 @@ class ProductCategoryScreen extends StatelessWidget {
                             MaterialPageRoute(
                               builder:
                                   (context) =>
-                                      ProductScreen(product: products[index]),
+                                      ProductScreen(id: products[index].id),
                             ),
                           );
                         },
@@ -230,7 +241,25 @@ class ProductCategoryScreen extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(18),
                                     ),
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    BlocProvider.of<CartBloc>(context).add(
+                                      AddProductEvent(
+                                        productCart: ProductCart(
+                                          id: products[index].id,
+                                          product: ProductC(
+                                            id: products[index].id,
+                                            title: products[index].title,
+                                            price: products[index].price,
+                                            description:
+                                                products[index].description,
+                                            images:
+                                                products[index].images.first,
+                                          ),
+                                          count: 1,
+                                        ),
+                                      ),
+                                    );
+                                  },
                                   child: Text('Заказать'),
                                 ),
                               ),

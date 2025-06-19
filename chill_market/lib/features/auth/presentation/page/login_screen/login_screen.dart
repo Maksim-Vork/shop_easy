@@ -22,9 +22,6 @@ class LoginScreen extends StatelessWidget {
           password: _controllerPassword.text,
         ),
       );
-    } else {
-      // Ошибка валидации
-      print('Ошибка валидации');
     }
   }
 

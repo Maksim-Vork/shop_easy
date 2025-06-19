@@ -1,10 +1,10 @@
 import 'package:chill_market/core/Service/ApiService/dio_service.dart';
 import 'package:chill_market/features/catalog/data/model/product_model.dart';
 
-class CatalogRemoteData {
+class CatalogRemoteDataSource {
   final DioService dioService;
 
-  CatalogRemoteData({required this.dioService});
+  CatalogRemoteDataSource({required this.dioService});
 
   Future<List<ProductModel>> getProducts() async {
     try {
@@ -35,6 +35,17 @@ class CatalogRemoteData {
               .toList();
 
       return products;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<ProductModel> getProductById(int id) async {
+    try {
+      final response = await dioService.get('products/$id');
+      final productJson = response.data;
+      final ProductModel product = ProductModel.fromJson(productJson);
+      return product;
     } catch (e) {
       throw Exception(e);
     }

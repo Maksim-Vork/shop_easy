@@ -4,7 +4,7 @@ import 'package:chill_market/features/catalog/domain/entity/product.dart';
 import 'package:chill_market/features/catalog/domain/repository/catalog_repository.dart';
 
 class CatalogRepositoryImpl extends CatalogRepository {
-  final CatalogRemoteData catalogRemoteData;
+  final CatalogRemoteDataSource catalogRemoteData;
 
   CatalogRepositoryImpl({required this.catalogRemoteData});
 
@@ -26,5 +26,14 @@ class CatalogRepositoryImpl extends CatalogRepository {
     final List<Product> products =
         productsModel.map((productsModel) => productsModel.toEntity()).toList();
     return products;
+  }
+
+  @override
+  Future<Product> getProductById(int id) async {
+    final ProductModel productModel = await catalogRemoteData.getProductById(
+      id,
+    );
+    final Product product = productModel.toEntity();
+    return product;
   }
 }

@@ -1,4 +1,6 @@
 import 'package:chill_market/core/Service/ThemeService/app_theme.dart';
+import 'package:chill_market/core/bloc_auth/auth_bloc.dart';
+import 'package:chill_market/core/bloc_auth/auth_event.dart';
 import 'package:chill_market/features/profile/domain/entity/settings.dart';
 import 'package:chill_market/features/profile/presentation/bloc/settings_bloc.dart';
 import 'package:chill_market/features/profile/presentation/bloc/settings_event.dart';
@@ -14,7 +16,6 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  String _selectedValue = 'Option 1';
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SettingsBloc, SettingsState>(
@@ -113,7 +114,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           Row(
                             children: [
                               InkWell(
-                                onTap: () {},
+                                onTap: () {
+                                  BlocProvider.of<AuthBloc>(
+                                    context,
+                                  ).add(LogoutAuthsEvent());
+                                },
                                 child: Text(
                                   'Выйти с акаунта',
                                   style: TextStyle(

@@ -1,3 +1,4 @@
+import 'package:chill_market/core/Service/LocatorService/get_it.dart';
 import 'package:chill_market/core/exceptions/app_exception.dart';
 import 'package:chill_market/features/auth/domain/entity/login.dart';
 import 'package:chill_market/features/auth/domain/usecase/login_usecase.dart';
@@ -6,8 +7,8 @@ import 'package:chill_market/features/auth/presentation/page/login_screen/bloc/l
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  final LoginUsecase loginUsecase;
-  LoginBloc(this.loginUsecase) : super(LoginInitial()) {
+  final loginUsecase = getIt<LoginUsecase>();
+  LoginBloc() : super(LoginInitial()) {
     on<LogInEvent>(_onLogin);
   }
 

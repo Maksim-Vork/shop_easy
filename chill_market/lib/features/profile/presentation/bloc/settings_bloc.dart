@@ -1,3 +1,4 @@
+import 'package:chill_market/core/Service/LocatorService/get_it.dart';
 import 'package:chill_market/features/profile/domain/entity/settings.dart';
 import 'package:chill_market/features/profile/domain/usecase/edit_settings_usecase.dart';
 import 'package:chill_market/features/profile/domain/usecase/get_settings_usecase.dart';
@@ -6,10 +7,9 @@ import 'package:chill_market/features/profile/presentation/bloc/settings_state.d
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
-  final EditSettingsUsecase editSettingsUsecase;
-  final GetSettingsUsecase getSettingsUsecase;
-  SettingsBloc(this.editSettingsUsecase, this.getSettingsUsecase)
-    : super(SettingsInitial()) {
+  final editSettingsUsecase = getIt<EditSettingsUsecase>();
+  final getSettingsUsecase = getIt<GetSettingsUsecase>();
+  SettingsBloc() : super(SettingsInitial()) {
     on<GetSettings>(_onGetSettings);
     on<EditSetting>(_onEdit);
   }

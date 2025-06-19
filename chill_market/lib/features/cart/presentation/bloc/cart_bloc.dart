@@ -1,3 +1,4 @@
+import 'package:chill_market/core/Service/LocatorService/get_it.dart';
 import 'package:chill_market/features/cart/domain/entity/product_cart.dart';
 import 'package:chill_market/features/cart/domain/usecase/add_product_cart.dart';
 import 'package:chill_market/features/cart/domain/usecase/delete_product_cart.dart';
@@ -8,16 +9,11 @@ import 'package:chill_market/features/cart/presentation/bloc/cart_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
-  final AddProductCartUsecase addProductCart;
-  final DeleteProductCartUsecase deleteProductCart;
-  final EditCountProductUsecase editCountProduct;
-  final GetCartUsecase getCartUsecase;
-  CartBloc(
-    this.addProductCart,
-    this.deleteProductCart,
-    this.editCountProduct,
-    this.getCartUsecase,
-  ) : super(CartInitial()) {
+  final addProductCart = getIt<AddProductCartUsecase>();
+  final deleteProductCart = getIt<DeleteProductCartUsecase>();
+  final editCountProduct = getIt<EditCountProductUsecase>();
+  final getCartUsecase = getIt<GetCartUsecase>();
+  CartBloc() : super(CartInitial()) {
     on<GetCartEvent>(_onGetCart);
     on<AddProductEvent>(_onAdd);
     on<EditCountEvent>(_onEditCount);

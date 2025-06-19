@@ -1,3 +1,4 @@
+import 'package:chill_market/core/Service/LocatorService/get_it.dart';
 import 'package:chill_market/features/catalog/domain/entity/product.dart';
 import 'package:chill_market/features/catalog/domain/usecase/get_list_products_by_slug.dart';
 import 'package:chill_market/features/catalog/presentation/screens/ProductCategoryScreen/bloc/category_event.dart';
@@ -5,8 +6,8 @@ import 'package:chill_market/features/catalog/presentation/screens/ProductCatego
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
-  final GetListProductsBySlug getListProductsBySlug;
-  CategoryBloc(this.getListProductsBySlug) : super(CategoryInitial()) {
+  final getListProductsBySlug = getIt<GetListProductsBySlug>();
+  CategoryBloc() : super(CategoryInitial()) {
     on<CategorySearchBySlug>(_onSearchCaategory);
   }
 

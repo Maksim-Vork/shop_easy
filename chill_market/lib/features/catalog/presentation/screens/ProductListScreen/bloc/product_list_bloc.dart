@@ -1,3 +1,4 @@
+import 'package:chill_market/core/Service/LocatorService/get_it.dart';
 import 'package:chill_market/features/catalog/domain/entity/product.dart';
 import 'package:chill_market/features/catalog/domain/usecase/get_list_product.dart';
 import 'package:chill_market/features/catalog/presentation/screens/ProductListScreen/bloc/product_list_event.dart';
@@ -5,8 +6,8 @@ import 'package:chill_market/features/catalog/presentation/screens/ProductListSc
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductListBloc extends Bloc<ProductListEvent, ProductListState> {
-  final GetListProductUsecase getListProductUsecase;
-  ProductListBloc(this.getListProductUsecase) : super(ProductListInitial()) {
+  final getListProductUsecase = getIt<GetListProductUsecase>();
+  ProductListBloc() : super(ProductListInitial()) {
     on<GetListProduct>(_onGet);
   }
 

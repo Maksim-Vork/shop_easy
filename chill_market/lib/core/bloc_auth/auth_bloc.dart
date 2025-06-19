@@ -1,11 +1,12 @@
 import 'package:chill_market/core/Service/LocalStoredToken/auth_local_token.dart';
+import 'package:chill_market/core/Service/LocatorService/get_it.dart';
 import 'package:chill_market/core/bloc_auth/auth_event.dart';
 import 'package:chill_market/core/bloc_auth/auth_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final AuthLocalTokenService authLocalTokenService;
-  AuthBloc(this.authLocalTokenService) : super(AuthInitialState()) {
+  final authLocalTokenService = getIt<AuthLocalTokenService>();
+  AuthBloc() : super(AuthInitialState()) {
     on<CheckAuthEvent>(_onCheck);
     on<LogoutAuthsEvent>(_onLogout);
   }
