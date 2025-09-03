@@ -76,7 +76,13 @@ lib/
  └── pubspec.yaml
 ```
 
----
+--- 
+<img width="320" height="698" alt="image" src="https://github.com/user-attachments/assets/c52b740b-21e2-4459-8300-647fb46221f6" /> <img width="322" height="698" alt="image" src="https://github.com/user-attachments/assets/84c2c6f7-ea16-4011-b894-5f940e396ebc" /> <img width="316" height="701" alt="image" src="https://github.com/user-attachments/assets/4becff88-de84-4d53-8c4a-d3dfdfd5933a" />
+
+
+
+
+
 
 ## 🤝 Контрибьюция  
 
